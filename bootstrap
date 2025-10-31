@@ -15,11 +15,13 @@ cd glaucus
 
 mkdir -p \
   /var/cache/rad \
-  /var/lib/rad/repo
+  /var/lib/rad/repo \
+  /var/tmp/rad
 
 ln -fs $PWD/core /var/lib/rad/repo
 ln -fs $PWD/log /var/log/rad
 ln -fs $PWD/src /var/cache/rad
+ln -fs $PWD/tmp /var/tmp/rad
 
 for i in a2x asciidoc gtkdocize help2man ldconfig makeinfo po4a texi2dvi; do
   cp -fPp core/musl/files/true /usr/bin/$i
