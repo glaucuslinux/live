@@ -11,25 +11,6 @@
 CFLAGS="-O2 -fstack-protector-strong -fstack-clash-protection -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-plt"
 LDFLAGS="-Wl,-O1,-s,-z,noexecstack,-z,now,-z,pack-relative-relocs,-z,relro,--as-needed,--gc-sections,--sort-common,--hash-style=gnu -Wno-stringop-overflow"
 
-for i in \
-atlas \
-choosenim config.nims \
-Nim nim nimalyzer nimble nim.cfg nimlangserver nimlsp nimony nph; do
-  rm -fR \
-    ~/$i \
-    ~/.$i \
-    ~/.cache/$i \
-    ~/.config/$i \
-    ~/.local/share/$i \
-    ~/.local/state/$i \
-    /etc/$i \
-    /opt/$i \
-    /usr/bin/$i \
-    /usr/lib/$i \
-    /usr/local/$i \
-    /usr/share/$i
-done
-
 mkdir -p \
   ../src/nim \
   ../tmp/nim \

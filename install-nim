@@ -8,25 +8,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-for i in \
-atlas \
-choosenim config.nims \
-Nim nim nimalyzer nimble nim.cfg nimlangserver nimlsp nimony nph; do
-  rm -fR \
-    ~/$i \
-    ~/.$i \
-    ~/.cache/$i \
-    ~/.config/$i \
-    ~/.local/share/$i \
-    ~/.local/state/$i \
-    /etc/$i \
-    /opt/$i \
-    /usr/bin/$i \
-    /usr/lib/$i \
-    /usr/local/$i \
-    /usr/share/$i
-done
-
 curl -fL --output-dir ~ -JOs https://github.com/nim-lang/nightlies/releases/download/latest-devel/linux_x64.tar.xz
 
 tar --no-same-owner -xmP -f ~/linux_x64.tar.xz -C ~
