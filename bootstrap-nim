@@ -32,12 +32,11 @@ LDFLAGS="$LDFLAGS" \
 sh build.sh \
   --os Linux \
   --cpu amd64 \
-  --extraBuildArgs "$CFLAGS" \
-  --parallel 5
+  --extraBuildArgs "$CFLAGS"
 
-cd ../tmp/nim/Nim-$ver
+cd ..
 
-./bin/nim compile \
+bin/nim compile \
   -d:release \
   -d:strip \
   --hints:off \
@@ -53,7 +52,7 @@ cd ../tmp/nim/Nim-$ver
   -d:leanCompiler
 
 DESTDIR=../toolchain \
-./install.sh \
-  /usr/bin
+./koch install \
+  /bin
 
 echo "bootstrap nim complete"
