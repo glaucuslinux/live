@@ -38,7 +38,10 @@ cd ..
 
 bin/nim compile \
   -d:release \
+  -d:useMalloc \
   -d:strip \
+  --colors:off \
+  --processing:off \
   --hints:off \
   --os:linux \
   --cpu:amd64 \
@@ -51,8 +54,9 @@ bin/nim compile \
   -d:release \
   -d:leanCompiler
 
-DESTDIR=../toolchain \
 ./koch install \
-  /bin
+  ../../../toolchain/lib
+
+ln -fs ../lib/nim/bin/nim ../../../toolchain/bin
 
 echo "bootstrap nim complete"
