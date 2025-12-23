@@ -10,7 +10,7 @@
 
 ver=2.2.6
 
-CFLAGS="-O2 -fstack-protector-strong -fstack-clash-protection -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-plt"
+CFLAGS="-pipe -O2 -fstack-protector-strong -fstack-clash-protection -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-plt"
 LDFLAGS="-Wl,-O1,-s,-z,noexecstack,-z,now,-z,pack-relative-relocs,-z,relro,--as-needed,--gc-sections,--sort-common,--hash-style=gnu -Wno-stringop-overflow"
 
 mkdir -p \
@@ -28,11 +28,10 @@ git -C ../tmp/nim/Nim-$ver/csources_v3 checkout eeab3ac -q
 
 cd ../tmp/nim/Nim-$ver/csources_v3
 
-LDFLAGS="$LDFLAGS" \
-sh build.sh \
-  --os Linux \
-  --cpu amd64 \
-  --extraBuildArgs "$CFLAGS"
+make \
+  CFLAGS="-Ic_code -w -fmax-errors=3 -fno-strict-aliasing -fno-ident -fno-math-errno $CFLAGS" \
+  LDFLAGS="-ldl -lm -lrt $LDFLAGS" \
+  -j 5 -O
 
 cd ..
 
