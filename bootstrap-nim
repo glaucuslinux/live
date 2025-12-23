@@ -39,11 +39,10 @@ bin/nim compile \
   -d:release \
   -d:useMalloc \
   -d:strip \
-  --colors:off \
-  --processing:off \
-  --hints:off \
   --os:linux \
   --cpu:amd64 \
+  --passC:"$CFLAGS" \
+  --passL:"$LDFLAGS" \
   --skipUserCfg \
   --skipParentCfg \
   --noNimblePath \
@@ -51,7 +50,16 @@ bin/nim compile \
 
 ./koch boot \
   -d:release \
-  -d:leanCompiler
+  -d:leanCompiler \
+  -d:useMalloc \
+  -d:strip \
+  --os:linux \
+  --cpu:amd64 \
+  --passC:"$CFLAGS" \
+  --passL:"$LDFLAGS" \
+  --skipUserCfg \
+  --skipParentCfg \
+  --noNimblePath
 
 ./koch install \
   ../../../toolchain/lib
