@@ -8,6 +8,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+ver=2.2.6
+
 CFLAGS="-O2 -fstack-protector-strong -fstack-clash-protection -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-plt"
 LDFLAGS="-Wl,-O1,-s,-z,noexecstack,-z,now,-z,pack-relative-relocs,-z,relro,--as-needed,--gc-sections,--sort-common,--hash-style=gnu -Wno-stringop-overflow"
 
@@ -16,15 +18,15 @@ mkdir -p \
   ../tmp/nim \
   ../toolchain
 
-curl -fL --output-dir ../src/nim -Os https://github.com/nim-lang/Nim/archive/v2.2.6.tar.gz
+curl -fL --output-dir ../src/nim -Os https://github.com/nim-lang/Nim/archive/v$ver.tar.gz
 
-tar --no-same-owner -xmP -f ../src/nim/v2.2.6.tar.gz -C ../tmp/nim
+tar --no-same-owner -xmP -f ../src/nim/v$ver.tar.gz -C ../tmp/nim
 
-git clone https://github.com/nim-lang/csources_v3 ../tmp/nim/Nim-2.2.6/csources_v3 -q
+git clone https://github.com/nim-lang/csources_v3 ../tmp/nim/Nim-$ver/csources_v3 -q
 
-git -C ../tmp/nim/Nim-2.2.6/csources_v3 checkout eeab3ac -q
+git -C ../tmp/nim/Nim-$ver/csources_v3 checkout eeab3ac -q
 
-cd ../tmp/nim/Nim-2.2.6/csources_v3
+cd ../tmp/nim/Nim-$ver/csources_v3
 
 LDFLAGS="$LDFLAGS" \
 sh build.sh \
@@ -33,7 +35,7 @@ sh build.sh \
   --extraBuildArgs "$CFLAGS" \
   --parallel 5
 
-cd ..
+cd ../tmp/nim/Nim-$ver
 
 ./bin/nim compile \
   -d:release \
@@ -49,8 +51,6 @@ cd ..
 ./koch boot \
   -d:release \
   -d:leanCompiler
-
-./deinstall.sh /usr/bin
 
 DESTDIR=../toolchain \
 ./install.sh \

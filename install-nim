@@ -12,8 +12,6 @@ curl -fL --output-dir ~ -JOs https://github.com/nim-lang/nightlies/releases/down
 
 tar --no-same-owner -xmP -f ~/linux_x64.tar.xz -C ~
 
-~/nim-*/deinstall.sh /usr/bin
-
 mv ~/nim-* ~/.nim
 
 echo "install nim complete"
