@@ -10,8 +10,8 @@
 
 ver=2.2.6
 
-CFLAGS="-O2 -fstack-protector-strong -fstack-clash-protection -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-plt"
-LDFLAGS="-Wl,-O1,-s,-z,noexecstack,-z,now,-z,pack-relative-relocs,-z,relro,--as-needed,--gc-sections,--sort-common,--hash-style=gnu -Wno-stringop-overflow"
+CFLAGS="-pipe -Os -fgcse-las -flto=auto -fuse-linker-plugin -ffunction-sections -fdata-sections -fstack-protector-strong -fstack-clash-protection -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-plt -march=x86-64-v3 -mtls-dialect=gnu2"
+LDFLAGS="-Wl,-O1,-s,-z,defs,-z,noexecstack,-z,now,-z,pack-relative-relocs,-z,relro,-z,separate-code,-z,text,--as-needed,--gc-sections,--no-keep-memory,--relax,--sort-common,--enable-new-dtags,--hash-style=gnu,--build-id=none -Wno-stringop-overflow -Wno-stringop-overread -pipe -Os -fgcse-las -flto=auto -fuse-linker-plugin -ffunction-sections -fdata-sections -fstack-protector-strong -fstack-clash-protection -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-plt -march=x86-64-v3 -mtls-dialect=gnu2"
 
 mkdir -p \
   ../src/nim \
@@ -29,7 +29,7 @@ git -C ../tmp/nim/Nim-$ver/csources_v3 checkout eeab3ac -q
 cd ../tmp/nim/Nim-$ver/csources_v3
 
 make \
-  CFLAGS="-Ic_code -w -fmax-errors=3 -fno-strict-aliasing -fno-ident -fno-math-errno -pipe $CFLAGS" \
+  CFLAGS="-Ic_code -w -fmax-errors=3 -fno-strict-aliasing -fno-ident -fno-math-errno $CFLAGS" \
   LDFLAGS="-ldl -lm -lrt $LDFLAGS" \
   -j 5 -O
 
