@@ -8,6 +8,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+cd ..
+
 mkdir -p \
   /var/cache/rad \
   /var/lib/rad/repo
@@ -33,9 +35,12 @@ cd live
 
 ./bootstrap-nim
 
-cd ../rad
+PATH="../toolchain/lib/nim/bin:$PATH" \
+./nim \
+  -o:../rad/rad \
+  ../rad/src/rad.nim
 
-./nim rad.nim
+cd ../rad
 
 ./rad bootstrap 1
 ./rad bootstrap 2
@@ -43,6 +48,12 @@ cd ../rad
 cd ../live
 
 ./img
+
+./nim \
+  -o:../rad/rad-x86-64-v3-glaucus-linux-musl \
+  --gcc.exe:../toolchain/usr/bin/x86_64-glaucus-linux-musl-gcc \
+  --gcc.linkerexe:../toolchain/usr/bin/x86_64-glaucus-linux-musl-gcc \
+  ../rad/src/rad.nim
 
 ./mount
 ./umount

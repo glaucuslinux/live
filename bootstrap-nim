@@ -14,19 +14,19 @@ CFLAGS="-pipe -Os -fgcse-las -flto=auto -fuse-linker-plugin -ffunction-sections 
 LDFLAGS="-Wl,-O1,-s,-z,defs,-z,noexecstack,-z,now,-z,pack-relative-relocs,-z,relro,-z,separate-code,-z,text,--as-needed,--gc-sections,--no-keep-memory,--relax,--sort-common,--enable-new-dtags,--hash-style=gnu,--build-id=none -Wno-stringop-overflow -Wno-stringop-overread -pipe -Os -fgcse-las -flto=auto -fuse-linker-plugin -ffunction-sections -fdata-sections -fstack-protector-strong -fstack-clash-protection -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-plt -march=x86-64-v3 -mtls-dialect=gnu2"
 
 mkdir -p \
-  ../src/nim \
-  ../tmp/nim \
+  /var/cache/rad/src/nim \
+  /var/tmp/rad/nim \
   ../toolchain
 
-curl -fL --output-dir ../src/nim -Os https://github.com/nim-lang/Nim/archive/v$ver.tar.gz
+curl -fL --output-dir /var/cache/rad/src/nim -Os https://github.com/nim-lang/Nim/archive/v$ver.tar.gz
 
-tar --no-same-owner -xmP -f ../src/nim/v$ver.tar.gz -C ../tmp/nim
+tar --no-same-owner -xmP -f /var/cache/rad/src/nim/v$ver.tar.gz -C /var/tmp/rad/nim
 
-git clone https://github.com/nim-lang/csources_v3 ../tmp/nim/Nim-$ver/csources_v3 -q
+git clone https://github.com/nim-lang/csources_v3 /var/tmp/rad/nim/Nim-$ver/csources_v3 -q
 
-git -C ../tmp/nim/Nim-$ver/csources_v3 checkout eeab3ac -q
+git -C /var/tmp/rad/nim/Nim-$ver/csources_v3 checkout eeab3ac -q
 
-cd ../tmp/nim/Nim-$ver/csources_v3
+cd /var/tmp/rad/nim/Nim-$ver/csources_v3
 
 make \
   CFLAGS="-Ic_code -w -fmax-errors=3 -fno-strict-aliasing -fno-ident -fno-math-errno $CFLAGS" \
