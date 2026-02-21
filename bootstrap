@@ -8,36 +8,40 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-git clone --recurse-submodules https://github.com/glaucuslinux/glaucus
-git -C glaucus submodule foreach 'git checkout main'
-
-cd glaucus
-
 mkdir -p \
   /var/cache/rad \
-  /var/lib/rad/repo \
-  /var/tmp/rad
+  /var/lib/rad/repo
 
 ln -fs $PWD/core /var/lib/rad/repo
 ln -fs $PWD/log /var/log/rad
 ln -fs $PWD/src /var/cache/rad
 ln -fs $PWD/tmp /var/tmp/rad
 
-for i in a2x asciidoc gtkdocize help2man ldconfig makeinfo po4a texi2dvi; do
+for i in \
+a2x asciidoc \
+gtkdocize \
+help2man \
+ldconfig \
+makeinfo \
+po4a \
+texi2dvi texi2pdf \
+yodl2man; do
   cp -fPp core/musl/files/true /usr/bin/$i
 done
 
-cd rad
+cd live
 
-curl -fL -o rad -s https://github.com/glaucuslinux/rad/releases/latest/download/rad-x86-64-v3-pc-linux-gnu
-curl -fLOs https://github.com/glaucuslinux/rad/releases/latest/download/rad-x86-64-v3-glaucus-linux-musl
+./bootstrap-nim
 
-chmod 755 rad
+cd ../rad
+
+./nim rad.nim
 
 ./rad bootstrap 1
 ./rad bootstrap 2
 
 cd ../live
+
 ./img
 
 ./mount
