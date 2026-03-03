@@ -20,12 +20,16 @@ LDFLAGS="-Wl,-O1,-s,-z,defs,-z,noexecstack,-z,now,-z,pack-relative-relocs,-z,rel
 src='/var/cache/rad/src/nim'
 tmp='/var/tmp/rad/nim'
 
+rm -fR \
+  "$src" \
+  "$tmp"
+
 mkdir -p \
   "$src" \
   "$tmp" \
   "$glaucus/toolchain/bin"
 
-curl -fL --output-dir "$src" -Os "https://github.com/nim-lang/Nim/archive/v$ver.tar.gz"
+curl -fL --output-dir "$src" -Os "$url"
 
 tar --no-same-owner -xmP -f "$src/v$ver.tar.gz" -C "$tmp"
 
