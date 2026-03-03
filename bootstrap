@@ -49,10 +49,11 @@ cd ../live
 
 ./img
 
+PATH="../toolchain/lib/nim/bin:$PATH" \
 ./nim \
   -o:../rad/rad-x86-64-v3-glaucus-linux-musl \
-  --gcc.exe:../toolchain/usr/bin/x86_64-glaucus-linux-musl-gcc \
-  --gcc.linkerexe:../toolchain/usr/bin/x86_64-glaucus-linux-musl-gcc \
+  --gcc.exe:../toolchain/bin/x86_64-glaucus-linux-musl-gcc \
+  --gcc.linkerexe:../toolchain/bin/x86_64-glaucus-linux-musl-gcc \
   ../rad/src/rad.nim
 
 ./mount
