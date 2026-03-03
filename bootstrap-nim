@@ -22,7 +22,7 @@ tmp='/var/tmp/rad/nim'
 mkdir -p \
   "$src" \
   "$tmp" \
-  ../toolchain
+  ../toolchain/bin
 
 curl -fL --output-dir "$src" -Os "https://github.com/nim-lang/Nim/archive/v$ver.tar.gz"
 
