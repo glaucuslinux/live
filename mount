@@ -13,18 +13,17 @@ if [ $(id -u) -ne 0 ]; then
   exit 1
 fi
 
-img="${1:-../glaucus-s6-x86-64-v3-$(date +"%Y%m%d").img}"
+img="${1:-../glaucus-s6-x86-64-v3.img}"
+mnt=../mnt
 
 if [ ! -f $img ]; then
   echo "img not found"
   exit 1
 fi
 
-MNTD=../mnt
-
 modprobe loop
 
-mountpoint -q $MNTD && umount -fR $MNTD
+mountpoint -q $mnt && umount -fR $mnt
 losetup -D
 
 device=$(losetup -f)
@@ -34,22 +33,21 @@ partitionTwo=${device}p2
 losetup $device $img
 partx -a $device
 
-rm -fR $MNTD
-mkdir -p $MNTD
+rm -fR $mnt
+mkdir -p $mnt
 
-mount $partitionTwo $MNTD
-mount $partitionOne $MNTD/boot
+mount $partitionTwo $mnt
+mount $partitionOne $mnt/boot
 
-rm -fR $MNTD/live
-cp -fPpR ../live $MNTD
+rm -fR $mnt/live
+cp -fPpR ../live $mnt
 
-[ -f $MNTD/initramfs ] && cp -fPp $MNTD/initramfs ..
+[ -f $mnt/initramfs ] && cp -fPp $mnt/initramfs ..
 
-cp -fPp ../rad/rad-x86-64-v3-glaucus-linux-musl $MNTD/usr/bin/rad
-chmod 755 $MNTD/usr/bin/rad
+cp -fPp ../rad/rad-x86-64-v3-glaucus-linux-musl $mnt/usr/bin/rad
 
 chown -R 0:0 \
-  $MNTD/live \
-  $MNTD/usr/bin/rad
+  $mnt/live \
+  $mnt/usr/bin/rad
 
 echo "mount complete"
