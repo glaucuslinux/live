@@ -10,8 +10,9 @@
 
 set -efu
 
-cmt='eeab3ac'
-ver='2.2.8'
+glaucus="$(cd "$(dirname "$0")"/.. && pwd -P)"
+
+. "$glaucus/core/nim/info"
 
 CFLAGS='-pipe -Os -fgcse-las -flto=auto -fuse-linker-plugin -ffunction-sections -fdata-sections -fstack-protector-strong -fstack-clash-protection -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-ident -fno-plt -march=x86-64-v3 -mtls-dialect=gnu2'
 LDFLAGS="-Wl,-O1,-s,-z,defs,-z,noexecstack,-z,now,-z,pack-relative-relocs,-z,relro,-z,separate-code,-z,text,--as-needed,--gc-sections,--no-keep-memory,--relax,--sort-common,--enable-new-dtags,--hash-style=gnu,--build-id=none -Wno-stringop-overflow -Wno-stringop-overread $CFLAGS"
@@ -22,7 +23,7 @@ tmp='/var/tmp/rad/nim'
 mkdir -p \
   "$src" \
   "$tmp" \
-  ../toolchain/bin
+  "$glaucus/toolchain/bin"
 
 curl -fL --output-dir "$src" -Os "https://github.com/nim-lang/Nim/archive/v$ver.tar.gz"
 
@@ -30,7 +31,7 @@ tar --no-same-owner -xmP -f "$src/v$ver.tar.gz" -C "$tmp"
 
 git clone https://github.com/nim-lang/csources_v3 "$tmp/Nim-$ver/csources_v3" -q
 
-git -C "$tmp/Nim-$ver/csources_v3" checkout "$cmt" -q
+git -C "$tmp/Nim-$ver/csources_v3" checkout eeab3ac -q
 
 cd "$tmp/Nim-$ver/csources_v3"
 
@@ -68,8 +69,8 @@ bin/nim compile \
   --noNimblePath
 
 ./koch install \
-  ../../../toolchain/lib
+  "$glaucus/toolchain/lib"
 
-ln -fs ../lib/nim/bin/nim ../../../toolchain/bin
+ln -fs ../lib/nim/bin/nim "$glaucus/toolchain/bin"
 
 echo "bootstrap nim complete"
