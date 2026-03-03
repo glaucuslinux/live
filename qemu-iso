@@ -8,7 +8,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-iso="${1:-../glaucus-s6-x86-64-v3-$(date +"%Y%m%d").iso}"
+iso="${1:-../glaucus-s6-x86-64-v3.iso}"
 
 exec qemu-system-x86_64 \
   -machine q35,accel=kvm \
@@ -21,4 +21,4 @@ exec qemu-system-x86_64 \
   -display gtk,gl=on \
   -vga qxl \
   -rtc base=localtime \
-  -bios /usr/share/ovmf/x64/OVMF.4m.fd
+  -bios /usr/share/ovmf/x64/OVMF.*
