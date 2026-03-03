@@ -8,13 +8,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-MNTD=../mnt
+mnt=../mnt
 
-mountpoint -q $MNTD && umount -fR $MNTD
+mountpoint -q $mnt && umount -fR $mnt
 losetup -D
 
 sleep 1
 
-rm -fR $MNTD
+rm -fR $mnt
 
 echo "umount complete"
