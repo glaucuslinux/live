@@ -13,69 +13,67 @@ if [ $(id -u) -ne 0 ]; then
   exit 1
 fi
 
-iso="../glaucus-s6-x86-64-v3-$(date +"%Y%m%d").iso"
+iso=../iso
+pkg=../pkg/skel
 ver=6.18.3-2-cachyos
 
-ISOD=../iso
-PKGD=../pkg/skel
-
-rm -fR $ISOD
+rm -fR $iso
 
 mkdir -p \
-  $ISOD/EFI/BOOT \
-  $ISOD/limine \
-  $ISOD/tmp
+  $iso/EFI/BOOT \
+  $iso/limine \
+  $iso/tmp
 
 cp -fPp \
   ../initramfs \
   ../cross/boot/vmlinuz \
-  $ISOD
+  $iso
 
-cp -fPp /usr/share/limine/BOOTX64.EFI $ISOD/EFI/BOOT
+cp -fPp /usr/share/limine/BOOTX64.EFI $iso/EFI/BOOT
 cp -fPp \
   ../core/limine/files/limine.conf \
   /usr/share/limine/limine-bios.sys \
   /usr/share/limine/limine-bios-cd.bin \
   /usr/share/limine/limine-uefi-cd.bin \
-  $ISOD/limine
+  $iso/limine
 
-for i in $(ls $PKGD); do
-  tar --no-same-owner -xmP -f $PKGD/$i/*.tar.zst -C $ISOD/tmp
+for i in $(ls $pkg); do
+  tar --no-same-owner -xmP -f $pkg/$i/*.tar.zst -C $iso/tmp
 done
-for i in $(ls $PKGD-devel); do
-  tar --no-same-owner -xmP -f $PKGD-devel/$i/*.tar.zst -C $ISOD/tmp
+for i in $(ls $pkg-devel); do
+  tar --no-same-owner -xmP -f $pkg-devel/$i/*.tar.zst -C $iso/tmp
 done
-for i in $(ls $PKGD-iso); do
-  tar --no-same-owner -xmP -f $PKGD-iso/$i/*.tar.zst -C $ISOD/tmp
+for i in $(ls $pkg-iso); do
+  tar --no-same-owner -xmP -f $pkg-iso/$i/*.tar.zst -C $iso/tmp
 done
 
 mkdir -p \
-  $ISOD/tmp/mnt/fs-ro \
-  $ISOD/tmp/mnt/fs-rw \
-  $ISOD/tmp/mnt/iso
+  $iso/tmp/mnt/fs-ro \
+  $iso/tmp/mnt/fs-rw \
+  $iso/tmp/mnt/iso
 
-cp -fPp ../rad/src/rad $ISOD/tmp/usr/bin
+cp -fPp ../rad/src/rad $iso/tmp/usr/bin
 
 rm -fR \
-  $ISOD/tmp/boot \
-  $ISOD/tmp/usr/share/bash-completion \
-  $ISOD/tmp/usr/share/doc \
-  $ISOD/tmp/usr/share/info \
-  $ISOD/tmp/usr/share/locale \
-  $ISOD/tmp/usr/share/man
+  $iso/tmp/boot \
+  $iso/tmp/usr/share/bash-completion \
+  $iso/tmp/usr/share/doc \
+  $iso/tmp/usr/share/info \
+  $iso/tmp/usr/share/locale \
+  $iso/tmp/usr/share/man
 
-depmod -b $ISOD/tmp $ver
+depmod -b $iso/tmp $ver
 
-chown -R root:root $ISOD
-chown -R 15:15 $ISOD/tmp/var/log/wtmpd
+chown -R root:root $iso
+chown -R 15:15 $iso/tmp/var/log/wtmpd
 
-mkfs.erofs $ISOD/fs $ISOD/tmp
+mkfs.erofs $iso/fs $iso/tmp
 
-rm -fR $ISOD/tmp
+rm -fR $iso/tmp
 
 xorriso \
   -as mkisofs \
-  -o $iso \
+  -o glaucus-s6-x86-64-v3.iso \
   -iso-level 3 \
   -l \
   -r \
@@ -95,10 +93,10 @@ xorriso \
   --protective-msdos-label \
   -efi-boot-part \
   --efi-boot-image \
-  $ISOD
+  $iso
 
 limine bios-install $iso
 
-rm -fR $ISOD
+rm -fR $iso
 
 echo "iso complete"
