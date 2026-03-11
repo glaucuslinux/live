@@ -81,7 +81,7 @@ fi
 tar --no-same-owner -xmP -f "$nim" -C "$glaucus/tmp/nim"
 
 if [ ! -d "$glaucus/src/nim/csources_v3" ]; then
-  git clone https://github.com/nim-lang/csources_v3 "$glaucus/src/nim"
+  git clone https://github.com/nim-lang/csources_v3 "$glaucus/src/nim/csources_v3"
 fi
 
 git -C "$glaucus/src/nim/csources_v3" checkout eeab3ac
