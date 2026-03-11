@@ -8,7 +8,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-export PATH=/usr/bin
+set -eu
+
+export PATH='/usr/bin'
 
 mount -t devtmpfs devtmpfs /dev
 mount -t proc proc /proc
@@ -16,9 +18,9 @@ mount -t sysfs sys /sys
 
 modprobe loop
 
-mdevd -C > /dev/null 2>&1 & pid=$!
+mdevd -C > /dev/null 2>&1 & pid="$!"
 
-until device=$(blkid -L GLAUCUS) && mount -o ro $device /media/iso; do
+until device="$(blkid -L GLAUCUS)" && mount -o ro "$device" /media/iso; do
   sleep 1
 done
 
@@ -32,12 +34,12 @@ mkdir -p \
 mount -o lowerdir=/media/fs-ro,upperdir=/media/fs-rw/upper,workdir=/media/fs-rw/work -t overlay overlay /mnt/root
 
 for i in dev proc sys; do
-  mount -M /$i /mnt/root/$i
+  mount -M "/$i" "/mnt/root/$i"
 done
 for i in fs-ro fs-rw iso; do
-  mount -M /media/$i /mnt/root/mnt/$i
+  mount -M "/media/$i" "/mnt/root/mnt/$i"
 done
 
-kill $pid
+kill "$pid"
 
 exec switch_root /mnt/root /usr/bin/init
