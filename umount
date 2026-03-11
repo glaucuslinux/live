@@ -8,13 +8,16 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-mnt=../mnt
+set -eu
 
-mountpoint -q $mnt && umount -fR $mnt
+glaucus="$(cd "$(dirname "$0")"/.. && pwd -P)"
+: "${glaucus:?}"
+
+mountpoint "$glaucus/mnt" && umount -fR "$glaucus/mnt"
 losetup -D
 
 sleep 1
 
-rm -fR $mnt
+rm -fRv "$glaucus/mnt"
 
-echo "umount complete"
+printf -- '%s\n' 'umount complete'
