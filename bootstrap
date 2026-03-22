@@ -1,0 +1,203 @@
+#!/bin/sh
+
+# SPDX-License-Identifier: MPL-2.0
+
+# Copyright © 2018-2026 Firas Khana
+
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+set -eu
+
+for exe in \
+autoconf automake autopoint awk \
+bash booster bzip2 \
+clang clang++ curl \
+diff \
+find flex \
+git gperf grep gzip \
+ld.lld libtool limine llvm-ar llvm-mc llvm-nm llvm-objcopy llvm-objdump \
+llvm-ranlib llvm-readelf llvm-size llvm-strip \
+m4 make meson mkfs.erofs mkfs.fat \
+ninja \
+patch perl pkg-config \
+sed \
+tar \
+xxhsum xz \
+yacc \
+zstd; do
+  if ! command -v "$exe" > /dev/null 2>&1; then
+    printf -- '%s\n' "$exe not found"
+    exit 127
+  fi
+done
+
+glaucus="$(cd "$(dirname "$0")"/.. && pwd -P)"
+: "${glaucus:?}"
+
+rm -fR \
+  "$glaucus"/cross \
+  "$glaucus"/log \
+  "$glaucus"/tmp \
+  "$glaucus"/toolchain
+
+mkdir -p \
+  "$glaucus"/cross \
+  "$glaucus"/log \
+  "$glaucus"/pkg \
+  "$glaucus"/src \
+  "$glaucus"/tmp \
+  "$glaucus"/toolchain/bin
+
+cp -fPp \
+  "$glaucus"/core/autoconf/files/glaucus-configure \
+  "$glaucus"/core/cmake/files/glaucus-cmake \
+  "$glaucus"/core/muon/files/glaucus-meson \
+  "$glaucus"/toolchain/bin
+
+for stub in \
+a2x asciidoc \
+gtkdocize \
+help2man \
+ldconfig \
+makeinfo \
+po4a \
+texi2dvi texi2html texi2pdf \
+yodl2man; do
+  cp -fPp "$glaucus"/core/musl/files/true "$glaucus/toolchain/bin/$stub"
+done
+
+export PATH="$glaucus/toolchain/bin:$PATH"
+
+export AR='llvm-ar'
+export AS='llvm-mc'
+export CC='clang'
+export CPP='clang -E'
+export CXX='clang++'
+export CXXCPP='clang++ -E'
+# silence `netbsd-curses` for now because of cflags; will be changed to `clang`
+export HOSTCC='gcc'
+export NM='llvm-nm'
+export OBJCOPY='llvm-objcopy'
+export OBJDUMP='llvm-objdump'
+export RANLIB='llvm-ranlib'
+export READELF='llvm-readelf'
+export SIZE='llvm-size'
+export STRIP='llvm-strip'
+
+export ARCH='x86-64'
+export CFLAGS="--target=x86_64-pc-linux-musl --sysroot=$glaucus/cross --rtlib=compiler-rt -unwindlib=libunwind --stdlib=libc++"
+export CROSS_COMPILE='x86_64-pc-linux-musl-'
+export CXXFLAGS="$CFLAGS"
+export LDFLAGS="$CFLAGS"
+export MAKEFLAGS='-j 5 -O'
+export PKG_CONFIG_LIBDIR="$glaucus"/cross/usr/lib/pkgconfig
+export PKG_CONFIG_PATH="$glaucus"/cross/usr/lib/pkgconfig
+export PKG_CONFIG_SYSROOT_DIR="$glaucus"/cross/
+export PKG_CONFIG_SYSTEM_INCLUDE_PATH="$glaucus"/cross/usr/include
+export PKG_CONFIG_SYSTEM_LIBRARY_PATH="$glaucus"/cross/usr/lib
+export PRETTY_NAME='glaucus s6 x86-64-v3'
+
+# used inside build scripts, but should not propagate to upstream packages build environments (so no `export`)
+build="$("$glaucus"/core/slibtool/files/config.guess)"
+host='x86_64-pc-linux-musl'
+target='x86_64-pc-linux-musl'
+
+cross="$glaucus"/cross
+dir="$glaucus"/cross
+toolchain="$glaucus"/toolchain
+
+core="$glaucus"/core
+tmp="$glaucus"/tmp
+
+bootstrap=1
+
+# ./rad build linux-headers musl-headers fortify-headers compiler-rt musl llvm-runtimes
+for pkg in \
+fs \
+linux-headers \
+musl-headers \
+compiler-rt \
+musl \
+llvm-runtimes \
+core \
+rad \
+expat \
+netbsd-curses \
+u-config \
+skalibs \
+execline \
+mdevd \
+s6 \
+utmps \
+attr \
+acl \
+libcap \
+libressl \
+shadow \
+zlib-ng \
+bzip2 \
+pigz \
+lz4 \
+xz \
+zstd \
+libarchive \
+autoconf \
+flex \
+gettext-tiny \
+libedit \
+m4 \
+make \
+mawk \
+slibtool \
+dash \
+grep \
+kmod \
+libudev-zero \
+toybox \
+util-linux \
+xxhash \
+s6-linux-init \
+s6-rc \
+s6-boot-scripts \
+linux-cachyos; do
+  # using a subshell removes the need to unset
+  # unset ver url sum bld run opt lic
+  # unset prepare configure build check package
+  (
+    nom="$pkg"
+
+    . "$glaucus/core/$pkg"/info
+
+    printf -- '%s\n' "$pkg ${ver-}"
+
+    if [ -n "${url-}" ]; then
+      printf -- '~~ fetch\n'
+      if [ -z "${sum-}" ]; then
+        cp -fPpR "$glaucus/src/$pkg" "$glaucus/tmp"
+      else
+        mkdir -p "$glaucus/tmp/$pkg"
+        tar --no-same-owner -xmP -f "$glaucus/src/$pkg/$(basename "$url")" -C "$glaucus/tmp/$pkg"
+      fi
+    fi
+
+    . "$glaucus/core/$pkg/build"
+
+    [ -d "$glaucus/tmp/$pkg" ] && cd "$glaucus/tmp/$pkg"
+    [ -d "$glaucus/tmp/$pkg/$pkg-${ver-}" ] && cd "$glaucus/tmp/$pkg/$pkg-${ver-}"
+
+    for phase in prepare configure build package; do
+      if command -v "$phase" > /dev/null 2>&1; then
+        printf -- '%s\n' "~~ $phase"
+        "$phase" >> "$glaucus/log/$pkg" 2>&1
+      fi
+    done
+
+    find "$dir"/usr/lib -name '*.la' -type f -delete
+
+    printf -- '\n'
+  )
+done
+
+printf -- 'stages 1 (toolchain) and 2 (cross) bootstrap complete\n'
