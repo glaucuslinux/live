@@ -8,6 +8,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+set -eu
+
 iso="${1:-../glaucus-s6-x86-64-v3.iso}"
 
 exec qemu-system-x86_64 \
@@ -17,7 +19,7 @@ exec qemu-system-x86_64 \
   -boot order=d \
   -m 4G \
   -name glaucus \
-  -cdrom $iso \
+  -cdrom "$iso" \
   -display gtk,gl=on \
   -vga qxl \
   -rtc base=localtime \
