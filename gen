@@ -8,18 +8,20 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-ver=$(uname -r)
+set -eu
 
-REPO=/var/lib/rad/repo/core
-GEND=../gen
-MODD=/usr/lib/modules/$ver/kernel
+ver="$(uname -r)"
+
+core='/var/lib/rad/repo/core'
+gen='../gen'
+mod="/usr/lib/modules/$ver/kernel"
 
 rm -fR \
-  $GEND \
+  "$gen" \
   ../initramfs
 
-mkdir -p $GEND
-cd $GEND
+mkdir -p "$gen"
+cd "$gen"
 
 mkdir -p \
   dev \
@@ -44,9 +46,9 @@ ln -fs bin usr/sbin
 cp -fPp ../live/init .
 
 cp -fPp \
-  $REPO/fs/files/group \
-  $REPO/fs/files/passwd \
-  $REPO/mdevd/files/mdev.conf \
+  "$core"/fs/files/group \
+  "$core"/fs/files/passwd \
+  "$core"/mdevd/files/mdev.conf \
   etc
 
 cp -fPp \
@@ -64,7 +66,7 @@ cp -fPp \
 ln -fs dash usr/bin/sh
 ln -fs kmod usr/bin/modprobe
 
-for i in $(toybox); do
+for i in "$(toybox)"; do
   ln -fs toybox usr/bin/$i
 done
 
@@ -84,41 +86,41 @@ cp -fPp \
   usr/lib
 
 cp -fPpR \
-  $MODD/arch \
-  $MODD/crypto \
-  $MODD/fs \
-  $MODD/lib \
-  usr/lib/modules/$ver/kernel
+  "$mod"/arch \
+  "$mod"/crypto \
+  "$mod"/fs \
+  "$mod"/lib \
+  usr/lib/modules/"$ver"/kernel
 
 cp -fPpR \
-  $MODD/drivers/ata \
-  $MODD/drivers/block \
-  $MODD/drivers/cdrom \
-  $MODD/drivers/gpu \
-  $MODD/drivers/hid \
-  $MODD/drivers/hwmon \
-  $MODD/drivers/input \
-  $MODD/drivers/md \
-  $MODD/drivers/message \
-  $MODD/drivers/nvme \
-  $MODD/drivers/scsi \
-  $MODD/drivers/usb/host \
-  $MODD/drivers/usb/storage \
-  $MODD/drivers/virtio \
-  usr/lib/modules/$ver/kernel/drivers
+  "$mod"/drivers/ata \
+  "$mod"/drivers/block \
+  "$mod"/drivers/cdrom \
+  "$mod"/drivers/gpu \
+  "$mod"/drivers/hid \
+  "$mod"/drivers/hwmon \
+  "$mod"/drivers/input \
+  "$mod"/drivers/md \
+  "$mod"/drivers/message \
+  "$mod"/drivers/nvme \
+  "$mod"/drivers/scsi \
+  "$mod"/drivers/usb/host \
+  "$mod"/drivers/usb/storage \
+  "$mod"/drivers/virtio \
+  usr/lib/modules/"$ver"/kernel/drivers
 
 cp -fPp \
-  $MODD/../modules.builtin \
-  $MODD/../modules.builtin.modinfo \
-  $MODD/../modules.order \
-  usr/lib/modules/$ver
+  "$mod"/../modules.builtin \
+  "$mod"/../modules.builtin.modinfo \
+  "$mod"/../modules.order \
+  usr/lib/modules/"$ver"
 
-depmod -b . $ver
+depmod -b . "$ver"
 
 find . | cpio -o | zstd -3 -T0 > ../initramfs
 
 cd ../live
 
-rm -fR $GEND
+rm -fR "$gen"
 
 echo "gen complete"
