@@ -13,11 +13,11 @@ set -eu
 glaucus="$(cd "$(dirname "$0")"/.. && pwd -P)"
 : "${glaucus:?}"
 
-mountpoint "$glaucus/mnt" && umount -fR "$glaucus/mnt"
+mountpoint "$glaucus"/mnt && umount -fR "$glaucus"/mnt
 losetup -D
 
 sleep 1
 
-rm -fRv "$glaucus/mnt"
+rm -fR "$glaucus"/mnt
 
-printf -- '%s\n' 'umount complete'
+printf -- 'umount complete\n'
