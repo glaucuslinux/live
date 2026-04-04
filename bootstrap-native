@@ -24,10 +24,7 @@ bash \
 byacc \
 curl \
 cmake \
-gmp \
 gperf \
-mpfr \
-mpc \
 libcap \
 libressl \
 shadow \
@@ -39,11 +36,9 @@ xz \
 zlib-ng \
 zstd \
 autoconf \
-binutils \
 expat \
 file \
 flex \
-gcc \
 gettext-tiny \
 libedit \
 m4 \
