@@ -122,7 +122,6 @@ compiler-rt \
 musl \
 llvm-runtimes \
 core \
-rad \
 expat \
 netbsd-curses \
 u-config \
@@ -131,8 +130,6 @@ execline \
 mdevd \
 s6 \
 utmps \
-attr \
-acl \
 libcap \
 libressl \
 shadow \
@@ -149,10 +146,8 @@ gettext-tiny \
 libedit \
 m4 \
 make \
-mawk \
 slibtool \
 dash \
-grep \
 kmod \
 libudev-zero \
 toybox \

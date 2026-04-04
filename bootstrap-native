@@ -16,7 +16,6 @@ mkdir -p '/var/tmp/rad'
 for pkg in \
 fs \
 core \
-rad \
 linux-headers \
 musl \
 perl \
@@ -29,8 +28,6 @@ gmp \
 gperf \
 mpfr \
 mpc \
-acl \
-attr \
 libcap \
 libressl \
 shadow \
@@ -51,7 +48,6 @@ gettext-tiny \
 libedit \
 m4 \
 make \
-mawk \
 muon \
 netbsd-curses \
 pcre2 \
@@ -63,7 +59,6 @@ iproute2 \
 openresolv \
 sdhcp \
 dash \
-grep \
 hwdata \
 kmod \
 less \
