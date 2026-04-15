@@ -11,22 +11,15 @@
 set -eu
 
 for exe in \
-autoconf automake autopoint awk \
-bash bzip2 \
-clang clang++ curl \
-diff \
-find flex \
-git gperf grep gzip \
-ld.lld libtool limine llvm-ar llvm-mc llvm-nm llvm-objcopy llvm-objdump \
+autoconf automake autopoint gperf libtool m4 make meson ninja pkg-config \
+clang clang++ ld.lld llvm-ar llvm-mc llvm-nm llvm-objcopy llvm-objdump \
 llvm-ranlib llvm-readelf llvm-size llvm-strip \
-m4 make meson mkfs.erofs mkfs.fat \
-ninja \
-patch perl pkg-config \
-sed \
-tar \
-xxhsum xz \
-yacc \
-zstd; do
+awk bash flex perl yacc \
+curl git \
+diff find grep sed patch \
+bzip2 gzip tar xxhsum xz zstd \
+limine mkfs.erofs mkfs.fat \
+; do
   if ! command -v "$exe" > /dev/null 2>&1; then
     printf -- '%s\n' "$exe not found"
     exit 127
@@ -57,14 +50,9 @@ cp -fPp \
   "$glaucus/toolchain/bin"
 
 for stub in \
-a2x asciidoc \
-gtkdocize \
-help2man \
-ldconfig \
-makeinfo \
-po4a \
-texi2dvi texi2html texi2pdf \
-yodl2man; do
+a2x asciidoc gtkdocize help2man ldconfig makeinfo po4a texi2dvi texi2html \
+texi2pdf yodl2man \
+; do
   cp -fPp "$glaucus/core/musl/files/true" "$glaucus/toolchain/bin/$stub"
 done
 
@@ -122,7 +110,7 @@ skalibs execline mdevd s6 utmps s6-linux-init s6-rc s6-boot-scripts \
 libcap libressl shadow xxhash \
 bzip2 libz lz4 xz zstd libarchive \
 autoconf flex gettext-tiny m4 make slibtool u-config \
-kmod libudev-zero toybox util-linux; do
+kmod libudev-zero toybox util-linux wak; do
   # using a subshell removes the need to unset
   # unset ver url sum bld run opt lic
   # unset prepare configure build check package
