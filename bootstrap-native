@@ -15,9 +15,9 @@ mkdir -p '/var/tmp/rad'
 
 for pkg in \
 fs \
-core \
 linux-headers \
 musl \
+fortify-headers \
 perl \
 automake \
 bash \
@@ -29,11 +29,10 @@ libcap \
 libressl \
 shadow \
 bzip2 \
-pigz \
 libarchive \
 lz4 \
 xz \
-zlib-ng \
+libz \
 zstd \
 autoconf \
 expat \
@@ -53,7 +52,6 @@ fping \
 iproute2 \
 openresolv \
 sdhcp \
-dash \
 hwdata \
 kmod \
 less \
@@ -71,8 +69,7 @@ s6 \
 utmps \
 s6-linux-init \
 s6-rc \
-s6-boot-scripts \
-linux-cachyos; do
+s6-boot-scripts; do
 done
 
 printf -- '%s\n' 'stage 3 (native) bootstrap complete'

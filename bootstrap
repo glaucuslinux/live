@@ -16,7 +16,7 @@ clang clang++ ld.lld llvm-ar llvm-mc llvm-nm llvm-objcopy llvm-objdump \
 llvm-ranlib llvm-readelf llvm-size llvm-strip \
 awk bash flex perl yacc \
 curl git \
-diff find grep sed patch \
+chroot diff find grep sed patch \
 bzip2 gzip tar xxhsum xz zstd \
 limine mkfs.erofs mkfs.fat \
 ; do
@@ -106,11 +106,12 @@ for pkg in \
 fs linux-headers musl-headers fortify-headers \
 compiler-rt musl llvm-runtimes \
 expat netbsd-curses libedit yash \
-skalibs execline mdevd s6 utmps s6-linux-init s6-rc s6-boot-scripts \
+skalibs execline s6 utmps \
 libcap libressl shadow xxhash \
 bzip2 libz lz4 xz zstd libarchive \
 autoconf flex gettext-tiny m4 make slibtool u-config \
-kmod libudev-zero toybox util-linux wak; do
+libudev-zero toybox util-linux wak \
+; do
   # using a subshell removes the need to unset
   # unset ver url sum bld run opt lic
   # unset prepare configure build check package
