@@ -15,7 +15,7 @@ fi
 
 iso=../iso
 pkg=../pkg/skel
-ver=6.18.3-2-cachyos
+ver=6.18.33-0-lts
 
 rm -fR $iso
 
