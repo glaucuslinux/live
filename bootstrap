@@ -106,7 +106,7 @@ for pkg in \
 fs linux-headers musl-headers fortify-headers \
 compiler-rt musl llvm-runtimes \
 expat netbsd-curses libedit yash \
-skalibs execline s6 utmps \
+skalibs execline s6 \
 libcap libressl shadow xxhash \
 bzip2 libz lz4 xz zstd libarchive \
 autoconf flex gettext-tiny m4 make slibtool u-config \

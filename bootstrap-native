@@ -44,7 +44,6 @@ m4 \
 make \
 muon \
 netbsd-curses \
-pcre2 \
 slibtool \
 u-config \
 eiwd \
@@ -53,7 +52,6 @@ iproute2 \
 openresolv \
 sdhcp \
 hwdata \
-kmod \
 less \
 libudev-zero \
 neatvi \
@@ -66,7 +64,6 @@ skalibs \
 execline \
 mdevd \
 s6 \
-utmps \
 s6-linux-init \
 s6-rc \
 s6-boot-scripts; do

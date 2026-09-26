@@ -46,14 +46,13 @@ ln -fs bin usr/sbin
 cp -fPp ../live/init .
 
 cp -fPp \
-  "$core"/fs/files/group \
-  "$core"/fs/files/passwd \
-  "$core"/mdevd/files/mdev.conf \
+  "$core/fs/files/group" \
+  "$core/fs/files/passwd" \
+  "$core/mdevd/files/mdev.conf" \
   etc
 
 cp -fPp \
   /usr/bin/blkid \
-  /usr/bin/dash \
   /usr/bin/kill \
   /usr/bin/kmod \
   /usr/bin/mdevd \
@@ -61,9 +60,10 @@ cp -fPp \
   /usr/bin/mount \
   /usr/bin/switch_root \
   /usr/bin/toybox \
+  /usr/bin/yash \
   usr/bin
 
-ln -fs dash usr/bin/sh
+ln -fs yash usr/bin/sh
 ln -fs kmod usr/bin/modprobe
 
 for i in "$(toybox)"; do
@@ -80,40 +80,39 @@ cp -fPp \
   /usr/lib/libmount.so* \
   /usr/lib/libskarnet.so* \
   /usr/lib/libterminfo.so \
-  /usr/lib/libutmps.so* \
   /usr/lib/libz.so* \
   /usr/lib/libzstd.so* \
   usr/lib
 
 cp -fPpR \
-  "$mod"/arch \
-  "$mod"/crypto \
-  "$mod"/fs \
-  "$mod"/lib \
-  usr/lib/modules/"$ver"/kernel
+  "$mod/arch" \
+  "$mod/crypto" \
+  "$mod/fs" \
+  "$mod/lib" \
+  "usr/lib/modules/$ver/kernel"
 
 cp -fPpR \
-  "$mod"/drivers/ata \
-  "$mod"/drivers/block \
-  "$mod"/drivers/cdrom \
-  "$mod"/drivers/gpu \
-  "$mod"/drivers/hid \
-  "$mod"/drivers/hwmon \
-  "$mod"/drivers/input \
-  "$mod"/drivers/md \
-  "$mod"/drivers/message \
-  "$mod"/drivers/nvme \
-  "$mod"/drivers/scsi \
-  "$mod"/drivers/usb/host \
-  "$mod"/drivers/usb/storage \
-  "$mod"/drivers/virtio \
-  usr/lib/modules/"$ver"/kernel/drivers
+  "$mod/drivers/ata" \
+  "$mod/drivers/block" \
+  "$mod/drivers/cdrom" \
+  "$mod/drivers/gpu" \
+  "$mod/drivers/hid" \
+  "$mod/drivers/hwmon" \
+  "$mod/drivers/input" \
+  "$mod/drivers/md" \
+  "$mod/drivers/message" \
+  "$mod/drivers/nvme" \
+  "$mod/drivers/scsi" \
+  "$mod/drivers/usb/host" \
+  "$mod/drivers/usb/storage" \
+  "$mod/drivers/virtio" \
+  "usr/lib/modules/$ver/kernel/drivers"
 
 cp -fPp \
-  "$mod"/../modules.builtin \
-  "$mod"/../modules.builtin.modinfo \
-  "$mod"/../modules.order \
-  usr/lib/modules/"$ver"
+  "$mod/../modules.builtin" \
+  "$mod/../modules.builtin.modinfo" \
+  "$mod/../modules.order" \
+  "usr/lib/modules/$ver"
 
 depmod -b . "$ver"
 
