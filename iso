@@ -1,8 +1,7 @@
 #!/bin/sh
 
+# SPDX-FileCopyrightText: Copyright (c) 2018-2026 Firas Khana
 # SPDX-License-Identifier: MPL-2.0
-
-# Copyright © 2026 Firas Khana
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +14,6 @@ fi
 
 iso=../iso
 pkg=../pkg/skel
-ver=6.18.33-0-lts
 
 rm -fR $iso
 
@@ -62,10 +60,7 @@ rm -fR \
   $iso/tmp/usr/share/locale \
   $iso/tmp/usr/share/man
 
-depmod -b $iso/tmp $ver
-
 chown -R root:root $iso
-chown -R 15:15 $iso/tmp/var/log/wtmpd
 
 mkfs.erofs $iso/fs $iso/tmp
 
